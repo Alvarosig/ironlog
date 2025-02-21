@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Workout } from './workout.entity';
 
 @Entity()
 export class Exercise {
@@ -10,4 +11,7 @@ export class Exercise {
 
   @Column({ name: 'muscle_group' })
   muscleGroup: string;
+
+  @ManyToMany(() => Workout, (workout) => workout.exercises)
+  workouts: Workout[];
 }

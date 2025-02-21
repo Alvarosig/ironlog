@@ -23,6 +23,7 @@ export class ExerciseService {
 
     return exercise;
   }
+
   async findAll() {
     const exercises = await this.exerciseRepository.find();
 

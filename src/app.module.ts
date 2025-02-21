@@ -5,9 +5,15 @@ import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { pgConfig } from 'dbConfig';
 import { ExerciseModule } from './exercise/exercise.module';
+import { WorkoutModule } from './workout/workout.module';
 
 @Module({
-  imports: [UsersModule, TypeOrmModule.forRoot(pgConfig), ExerciseModule],
+  imports: [
+    TypeOrmModule.forRoot(pgConfig),
+    UsersModule,
+    ExerciseModule,
+    WorkoutModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

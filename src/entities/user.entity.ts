@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Workout } from './workout.entity';
 
 @Entity()
 export class User {
@@ -22,4 +23,7 @@ export class User {
     default: () => 'CURRENT_TIMESTAMP',
   })
   update_date: Date;
+
+  @OneToMany(() => Workout, (workout) => workout.user, { cascade: true })
+  workouts: Workout[];
 }
