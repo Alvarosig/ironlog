@@ -1,5 +1,12 @@
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Workout } from './workout.entity';
+import { ExerciseProgress } from './exerciseProgress.entity';
 
 @Entity()
 export class Exercise {
@@ -14,4 +21,7 @@ export class Exercise {
 
   @ManyToMany(() => Workout, (workout) => workout.exercises)
   workouts: Workout[];
+
+  @OneToMany(() => ExerciseProgress, (progress) => progress.exercise)
+  progressions: ExerciseProgress[];
 }
