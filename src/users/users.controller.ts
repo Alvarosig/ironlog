@@ -34,7 +34,7 @@ export class UsersController {
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
     const user = await this.usersService.findOne(id);
-    return { user };
+    return user;
   }
 
   @Put(':id')

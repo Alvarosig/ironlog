@@ -22,7 +22,16 @@ export class MainSeeder implements Seeder {
       users = await factoryManager.get(User).saveMany(5); // Cria 5 usuários
     }
 
-    // Criar Workouts e associar a usuários corretamente
+    // Criar Exercícios e associar a Usuários corretamente
+    const exercises: Exercise[] = [];
+    for (let i = 0; i < 15; i++) {
+      const exercise = await factoryManager.get(Exercise).make();
+      exercise.user = users[Math.floor(Math.random() * users.length)]; // Associa cada exercício a um usuário aleatório
+      exercises.push(exercise);
+    }
+    await exerciseRepository.save(exercises);
+
+    // Criar Workouts e associar a Usuários
     const workouts: Workout[] = [];
     for (let i = 0; i < 10; i++) {
       const workout = await factoryManager.get(Workout).make();
@@ -30,14 +39,6 @@ export class MainSeeder implements Seeder {
       workouts.push(workout);
     }
     await workoutRepository.save(workouts);
-
-    // Criar Exercícios e associar a Workouts corretamente
-    const exercises: Exercise[] = [];
-    for (let i = 0; i < 15; i++) {
-      const exercise = await factoryManager.get(Exercise).make();
-      exercises.push(exercise);
-    }
-    await exerciseRepository.save(exercises);
 
     // Associar exercícios aos Workouts
     for (const workout of workouts) {
@@ -52,7 +53,7 @@ export class MainSeeder implements Seeder {
       for (let i = 0; i < numRecords; i++) {
         const progress = await factoryManager.get(ExerciseProgress).make();
         progress.exercise = exercise;
-        progress.user = users[Math.floor(Math.random() * users.length)]; // Associando um usuário ao progresso
+        progress.user = exercise.user; // O progresso agora pertence ao usuário do exercício
         progressRecords.push(progress);
       }
     }
