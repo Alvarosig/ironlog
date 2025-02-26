@@ -20,7 +20,10 @@ export class UsersService {
 
     if (!user) throw new NotFoundException();
 
-    return user;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...userWithoutPassword } = user;
+
+    return userWithoutPassword;
   }
 
   async findAll() {
@@ -28,10 +31,14 @@ export class UsersService {
 
     if (!users) throw new NotFoundException();
 
-    return users;
+    return users.map(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      ({ password, ...userWithoutPassword }) => userWithoutPassword,
+    );
   }
 
   async create(dto: CreateUserZodDTO) {
+    // falta hashear a senha
     return await this.userRepository.save(dto);
   }
 
@@ -51,7 +58,14 @@ export class UsersService {
 
     await this.userRepository.update({ id }, updateData);
 
-    return this.userRepository.findOne({ where: { id } });
+    const updatedUser = await this.userRepository.findOne({ where: { id } });
+
+    if (!updatedUser) throw new NotFoundException();
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...userWithoutPassword } = updatedUser;
+
+    return userWithoutPassword;
   }
 
   async delete(id: number) {
