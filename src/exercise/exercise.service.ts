@@ -17,11 +17,20 @@ export class ExerciseService {
       where: {
         id,
       },
+      relations: ['progressions'],
     });
 
     if (!exercise) throw new NotFoundException();
 
-    return exercise;
+    return {
+      ...exercise,
+      progressions: exercise.progressions.map(({ id, reps, weight, date }) => ({
+        id,
+        reps,
+        weight,
+        date,
+      })),
+    };
   }
 
   async findAll() {
@@ -51,6 +60,10 @@ export class ExerciseService {
   }
 
   async delete(id: number) {
+    const exercise = await this.exerciseRepository.findOne({ where: { id } });
+
+    if (!exercise) throw new NotFoundException('Exercício não encontrado');
+
     await this.exerciseRepository.delete({ id });
   }
 }
