@@ -17,20 +17,29 @@ export class ProgressService {
       where: {
         id,
       },
-      relations: ['progressions'],
+      select: ['id', 'reps', 'weight', 'date'],
     });
 
     if (!progress) throw new NotFoundException();
 
-    return { progress };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { user, ...progressWithoutUser } = progress;
+
+    return progressWithoutUser;
   }
 
   async findAll() {
     const progress = await this.progressRepository.find();
 
-    if (!progress) throw new NotFoundException();
+    if (progress.length === 0) throw new NotFoundException();
 
-    return progress;
+    const progressWithoutUser = progress.map((progress) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { user, ...progressWithoutUser } = progress;
+      return progressWithoutUser;
+    });
+
+    return progressWithoutUser;
   }
 
   async create(dto: CreateProgressZodDTO) {

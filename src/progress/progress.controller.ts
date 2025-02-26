@@ -40,7 +40,7 @@ export class ProgressController {
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
     const progress = await this.progressService.findOne(id);
-    return { progress };
+    return progress;
   }
 
   @Put(':id')

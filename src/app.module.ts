@@ -12,8 +12,8 @@ import { ProgressModule } from './progress/progress.module';
   imports: [
     TypeOrmModule.forRoot(pgConfig),
     UsersModule,
-    ExerciseModule,
     ProgressModule,
+    ExerciseModule,
     WorkoutModule,
   ],
   controllers: [AppController],
