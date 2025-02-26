@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Workout } from './workout.entity';
-import { ExerciseProgress } from './exerciseProgress.entity';
+import { Progress } from './progress.entity';
 import { User } from './user.entity';
 
 @Entity()
@@ -24,10 +24,10 @@ export class Exercise {
   @ManyToMany(() => Workout, (workout) => workout.exercises)
   workouts: Workout[];
 
-  @OneToMany(() => ExerciseProgress, (progress) => progress.exercise, {
+  @OneToMany(() => Progress, (progress) => progress.exercise, {
     cascade: true,
   })
-  progressions: ExerciseProgress[];
+  progressions: Progress[];
 
   @ManyToOne(() => User, (user) => user.exercises, { onDelete: 'CASCADE' })
   user: User;

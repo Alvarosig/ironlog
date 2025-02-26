@@ -1,5 +1,5 @@
 import { Exercise } from '../entities/exercise.entity';
-import { ExerciseProgress } from '../entities/exerciseProgress.entity';
+import { Progress } from '../entities/progress.entity';
 import { User } from '../entities/user.entity';
 import { Workout } from '../entities/workout.entity';
 import { DataSource } from 'typeorm';
@@ -13,8 +13,7 @@ export class MainSeeder implements Seeder {
     const userRepository = dataSource.getRepository(User);
     const workoutRepository = dataSource.getRepository(Workout);
     const exerciseRepository = dataSource.getRepository(Exercise);
-    const exerciseProgressRepository =
-      dataSource.getRepository(ExerciseProgress);
+    const exerciseProgressRepository = dataSource.getRepository(Progress);
 
     // Buscar usuários existentes ou criar novos
     let users = await userRepository.find();
@@ -47,11 +46,11 @@ export class MainSeeder implements Seeder {
     }
 
     // Criar registros de progresso (ExerciseProgress) corretamente
-    const progressRecords: ExerciseProgress[] = [];
+    const progressRecords: Progress[] = [];
     for (const exercise of exercises) {
       const numRecords = Math.floor(Math.random() * 4) + 1; // Criar entre 1 e 4 registros por exercício
       for (let i = 0; i < numRecords; i++) {
-        const progress = await factoryManager.get(ExerciseProgress).make();
+        const progress = await factoryManager.get(Progress).make();
         progress.exercise = exercise;
         progress.user = exercise.user; // O progresso agora pertence ao usuário do exercício
         progressRecords.push(progress);

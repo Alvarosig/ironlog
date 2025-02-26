@@ -6,15 +6,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { pgConfig } from 'dbConfig';
 import { ExerciseModule } from './exercise/exercise.module';
 import { WorkoutModule } from './workout/workout.module';
-import { ExerciseProgressModule } from './exercise-progress/exercise-progress.module';
+import { ProgressModule } from './progress/progress.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(pgConfig),
     UsersModule,
     ExerciseModule,
+    ProgressModule,
     WorkoutModule,
-    ExerciseProgressModule,
   ],
   controllers: [AppController],
   providers: [AppService],

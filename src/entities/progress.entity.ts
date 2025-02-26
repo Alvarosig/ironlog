@@ -10,7 +10,7 @@ import { Exercise } from './exercise.entity';
 import { User } from './user.entity';
 
 @Entity()
-export class ExerciseProgress {
+export class Progress {
   @PrimaryGeneratedColumn()
   id: number;
 

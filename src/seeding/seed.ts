@@ -3,18 +3,13 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import { runSeeders, SeederOptions } from 'typeorm-extension';
 import { UserFactory } from './user.factory';
 import { ExerciseFactory } from './exercise.factory';
-import { ExerciseProgressFactory } from './exerciseProgress.factory';
+import { ProgressFactory } from './progress.factory';
 import { WorkoutFactory } from './workout.factory';
 import { MainSeeder } from './main.seeder';
 
 const options: DataSourceOptions & SeederOptions = {
   ...pgConfig,
-  factories: [
-    UserFactory,
-    ExerciseFactory,
-    ExerciseProgressFactory,
-    WorkoutFactory,
-  ],
+  factories: [UserFactory, ExerciseFactory, ProgressFactory, WorkoutFactory],
   seeds: [MainSeeder],
 };
 
