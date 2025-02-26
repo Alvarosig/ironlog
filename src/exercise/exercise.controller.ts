@@ -40,7 +40,7 @@ export class ExerciseController {
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
     const exercise = await this.exerciseService.findOne(id);
-    return { exercise };
+    return exercise;
   }
 
   @Put(':id')

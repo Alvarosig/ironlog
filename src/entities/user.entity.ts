@@ -1,5 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Workout } from './workout.entity';
+import { Exercise } from './exercise.entity';
 
 @Entity()
 export class User {
@@ -26,4 +27,7 @@ export class User {
 
   @OneToMany(() => Workout, (workout) => workout.user, { cascade: true })
   workouts: Workout[];
+
+  @OneToMany(() => Exercise, (exercise) => exercise.user, { cascade: true })
+  exercises: Exercise[];
 }

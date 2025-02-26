@@ -14,7 +14,9 @@ export class ExerciseProgress {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Exercise, { eager: true })
+  @ManyToOne(() => Exercise, (exercise) => exercise.progressions, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'exercise_id' })
   exercise: Exercise;
 
