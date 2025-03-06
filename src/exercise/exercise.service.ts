@@ -12,10 +12,13 @@ export class ExerciseService {
     private exerciseRepository: Repository<Exercise>,
   ) {}
 
-  async findOne(id: number) {
+  async findOne(id: number, userId: number) {
     const exercise = await this.exerciseRepository.findOne({
       where: {
         id,
+        user: {
+          id: userId,
+        },
       },
       relations: ['progressions'],
     });
@@ -33,22 +36,36 @@ export class ExerciseService {
     };
   }
 
-  async findAll() {
-    const exercises = await this.exerciseRepository.find();
+  async findAll(userId: number) {
+    const exercises = await this.exerciseRepository.find({
+      where: {
+        user: {
+          id: userId,
+        },
+      },
+    });
 
-    if (!exercises) throw new NotFoundException();
+    if (!exercises.length) throw new NotFoundException();
 
     return exercises;
   }
 
-  async create(dto: CreateExerciseZodDTO) {
-    return await this.exerciseRepository.save(dto);
+  async create(dto: CreateExerciseZodDTO, userId: number) {
+    const exercise = this.exerciseRepository.create({
+      ...dto,
+      user: { id: userId }, // Associa o usuário ao exercício
+    });
+
+    return await this.exerciseRepository.save(exercise);
   }
 
-  async update(id: number, dto: UpdateExerciseZodDTO) {
+  async update(id: number, dto: UpdateExerciseZodDTO, userId: number) {
     const exercise = await this.exerciseRepository.findOne({
       where: {
         id,
+        user: {
+          id: userId,
+        },
       },
     });
 
@@ -59,8 +76,15 @@ export class ExerciseService {
     return this.exerciseRepository.findOne({ where: { id } });
   }
 
-  async delete(id: number) {
-    const exercise = await this.exerciseRepository.findOne({ where: { id } });
+  async delete(id: number, userId: number) {
+    const exercise = await this.exerciseRepository.findOne({
+      where: {
+        id,
+        user: {
+          id: userId,
+        },
+      },
+    });
 
     if (!exercise) throw new NotFoundException('Exercício não encontrado');
 
