@@ -4,6 +4,7 @@ import { User } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserZodDTO } from './dto/createUserZod.dto';
 import { UpdateUserZodDTO } from './dto/updateUserZod.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -38,8 +39,19 @@ export class UsersService {
   }
 
   async create(dto: CreateUserZodDTO) {
-    // falta hashear a senha
-    return await this.userRepository.save(dto);
+    const hashedPassword = await bcrypt.hash(dto.password, 10);
+
+    const newUser = this.userRepository.create({
+      ...dto,
+      password: hashedPassword,
+    });
+
+    const savedUser = await this.userRepository.save(newUser);
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...userWithoutPassword } = savedUser;
+
+    return userWithoutPassword;
   }
 
   async update(id: number, dto: UpdateUserZodDTO) {
@@ -78,5 +90,15 @@ export class UsersService {
     if (!user) throw new NotFoundException();
 
     await this.userRepository.delete({ id });
+  }
+
+  async findByEmail(email: string) {
+    const user = await this.userRepository.findOneBy({
+      email,
+    });
+
+    if (!user) throw new NotFoundException();
+
+    return user;
   }
 }
