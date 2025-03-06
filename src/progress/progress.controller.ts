@@ -8,7 +8,8 @@ import {
   ParseIntPipe,
   Post,
   Put,
-  UsePipes,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { ZodValidationPipe } from 'src/pipes/zodValidationPipe';
 import { ProgressService } from './progress.service';
@@ -20,42 +21,69 @@ import {
   updateProgressSchema,
   UpdateProgressZodDTO,
 } from './dto/updateProgressZod.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { RequestWithUser } from 'src/auth/request-with-user';
 
-@Controller('exercise/progress')
+@Controller('exercise')
+@UseGuards(JwtAuthGuard)
 export class ProgressController {
   constructor(private progressService: ProgressService) {}
 
-  @Post()
-  @UsePipes(new ZodValidationPipe(createProgressSchema))
-  async create(@Body() dto: CreateProgressZodDTO) {
-    const progress = await this.progressService.create(dto);
-    return { progress };
+  @Post(':exerciseId/progress')
+  async create(
+    @Param('exerciseId', ParseIntPipe) exerciseId: number,
+    @Body(new ZodValidationPipe(createProgressSchema))
+    dto: CreateProgressZodDTO,
+    @Req()
+    req: RequestWithUser,
+  ) {
+    const userId = req.user.userId;
+    const progress = await this.progressService.create(exerciseId, dto, userId);
+    return progress;
   }
 
-  @Get()
-  async findAll() {
-    return await this.progressService.findAll();
-  }
-
-  @Get(':id')
+  @Get('progress/:id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
     const progress = await this.progressService.findOne(id);
     return progress;
   }
 
-  @Put(':id')
+  @Put(':exerciseId/progress/:progressId')
   async update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('exerciseId', ParseIntPipe) exerciseId: number,
+    @Param('progressId', ParseIntPipe) progressId: number,
     @Body(new ZodValidationPipe(updateProgressSchema))
     dto: UpdateProgressZodDTO,
+    @Req() req: RequestWithUser,
   ) {
-    const progress = await this.progressService.update(id, dto);
-    return { progress };
+    const userId = req.user.userId;
+    const progress = await this.progressService.update(
+      exerciseId,
+      progressId,
+      dto,
+      userId,
+    );
+    return progress;
   }
 
-  @Delete(':id')
+  @Delete(':exerciseId/progress')
   @HttpCode(204)
-  async delete(@Param('id', ParseIntPipe) id: number) {
-    await this.progressService.delete(id);
+  async deleteAll(
+    @Param('exerciseId', ParseIntPipe) exerciseId: number,
+    @Req() req: RequestWithUser,
+  ) {
+    const userId = req.user.userId;
+    await this.progressService.deleteAll(exerciseId, userId);
+  }
+
+  @Delete(':exerciseId/progress/:progressId')
+  @HttpCode(204)
+  async deleteOne(
+    @Param('exerciseId', ParseIntPipe) exerciseId: number,
+    @Param('progressId', ParseIntPipe) progressId: number,
+    @Req() req: RequestWithUser,
+  ) {
+    const userId = req.user.userId;
+    await this.progressService.deleteOne(exerciseId, progressId, userId);
   }
 }
