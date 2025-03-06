@@ -27,7 +27,7 @@ export class Progress {
   @Column()
   reps: number;
 
-  @Column('decimal', { precision: 5, scale: 2 })
+  @Column()
   weight: number;
 
   @CreateDateColumn()
