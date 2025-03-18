@@ -52,7 +52,6 @@ export class MainSeeder implements Seeder {
       for (let i = 0; i < numRecords; i++) {
         const progress = await factoryManager.get(Progress).make();
         progress.exercise = exercise;
-        progress.user = exercise.user; // O progresso agora pertence ao usuário do exercício
         progressRecords.push(progress);
       }
     }
