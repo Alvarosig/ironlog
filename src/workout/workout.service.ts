@@ -29,6 +29,8 @@ export class WorkoutService {
       relations: ['exercises'],
     });
 
+    teste;
+
     if (!workout) throw new NotFoundException();
 
     return workout;
