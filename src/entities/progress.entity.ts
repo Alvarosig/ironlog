@@ -7,6 +7,7 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 import { Exercise } from './exercise.entity';
+import { User } from './user.entity';
 
 @Entity()
 export class Progress {
@@ -18,6 +19,10 @@ export class Progress {
   })
   @JoinColumn({ name: 'exercise_id' })
   exercise: Exercise;
+
+  @ManyToOne(() => User, { eager: true })
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 
   @Column()
   reps: number;

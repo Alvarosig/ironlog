@@ -20,23 +20,20 @@ export class ProgressService {
     private userRepository: Repository<User>,
   ) {}
 
-  async findOne(exerciseId: number, userId: number) {
+  async findOne(id: number) {
     const progress = await this.progressRepository.findOne({
       where: {
-        id: exerciseId,
-        exercise: {
-          user: {
-            id: userId,
-          },
-        },
+        id,
       },
-      relations: ['exercise'],
       select: ['id', 'reps', 'weight', 'date'],
     });
 
     if (!progress) throw new NotFoundException();
 
-    return progress;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { user, ...progressWithoutUser } = progress;
+
+    return progressWithoutUser;
   }
 
   async create(exerciseId: number, dto: CreateProgressZodDTO, userId: number) {
@@ -105,10 +102,8 @@ export class ProgressService {
     const updatedProgress = await this.progressRepository.findOne({
       where: {
         id: progressId,
-        exercise: {
-          user: {
-            id: userId,
-          },
+        user: {
+          id: userId,
         },
       },
       relations: ['exercise'],
@@ -119,7 +114,10 @@ export class ProgressService {
       throw new NotFoundException('Progresso não encontrado após atualização');
     }
 
-    return updatedProgress;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { user, ...progressWithoutUser } = updatedProgress;
+
+    return progressWithoutUser;
   }
 
   async deleteAll(exerciseId: number, userId: number) {
@@ -127,9 +125,9 @@ export class ProgressService {
       where: {
         exercise: {
           id: exerciseId,
-          user: {
-            id: userId,
-          },
+        },
+        user: {
+          id: userId,
         },
       },
     });
@@ -147,7 +145,8 @@ export class ProgressService {
     const progress = await this.progressRepository.findOne({
       where: {
         id: progressId,
-        exercise: { id: exerciseId, user: { id: userId } },
+        exercise: { id: exerciseId },
+        user: { id: userId },
       },
     });
 

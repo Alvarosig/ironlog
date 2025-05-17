@@ -42,13 +42,9 @@ export class ProgressController {
     return progress;
   }
 
-  @Get(':exerciseId/progress')
-  async findOne(
-    @Param('exerciseId', ParseIntPipe) exerciseId: number,
-    @Req() req: RequestWithUser,
-  ) {
-    const userId = req.user.userId;
-    const progress = await this.progressService.findOne(exerciseId, userId);
+  @Get('progress/:id')
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    const progress = await this.progressService.findOne(id);
     return progress;
   }
 
